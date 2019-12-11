@@ -3,6 +3,7 @@ package uk.antiperson.stackmob.checks.trait;
 import org.bukkit.entity.Entity;
 import uk.antiperson.stackmob.api.checks.ITraitManager;
 import uk.antiperson.stackmob.api.checks.ApplicableTrait;
+import uk.antiperson.stackmob.api.tools.ConfigHelper;
 
 public class FireTrait implements ApplicableTrait {
 
@@ -23,7 +24,7 @@ public class FireTrait implements ApplicableTrait {
 
     @Override
     public void applyTrait(Entity original, Entity spawned) {
-        if(traitManager.getStackMob().getCustomConfig().getStringList("fire-ticks.blacklist")
+        if(ConfigHelper.getStringList(traitManager.getStackMob(), "fire-ticks.blacklist", original)
                 .contains(original.getType().toString())){
             return;
         }

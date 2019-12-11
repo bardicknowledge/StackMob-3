@@ -6,11 +6,13 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
 import org.bukkit.material.Wool;
+import sun.security.krb5.Config;
 import uk.antiperson.stackmob.StackMob;
 import uk.antiperson.stackmob.api.StackedEntity;
 import uk.antiperson.stackmob.api.entity.IStackLogic;
 import uk.antiperson.stackmob.api.entity.StackTools;
 import uk.antiperson.stackmob.api.events.EntityStackEvent;
+import uk.antiperson.stackmob.api.tools.ConfigHelper;
 import uk.antiperson.stackmob.api.tools.GlobalValues;
 import uk.antiperson.stackmob.api.tools.ItemTools;
 
@@ -78,7 +80,7 @@ public class StackLogic implements IStackLogic {
 
     @Override
     public boolean notEnoughNearby(Entity original){
-        int dontStackTill = sm.getCustomConfig().getInt("dont-stack-until");
+        int dontStackTill = ConfigHelper.getInt(sm,"dont-stack-until", original);
         if(dontStackTill <= 1){
             return false;
         }
@@ -135,11 +137,11 @@ public class StackLogic implements IStackLogic {
                 .contains(entity.getType().toString())){
             return false;
         }
-        if(!sm.getCustomConfig().getStringList("wait-to-stack.spawn-reasons")
+        if(!ConfigHelper.getStringList(sm,"wait-to-stack.spawn-reasons", entity)
                 .contains(reason.toString())){
             return false;
         }
-        int waitingTime = sm.getCustomConfig().getInt("wait-to-stack.wait-time");
+        int waitingTime = ConfigHelper.getInt(sm,"wait-to-stack.wait-time", entity);
         StackTools.addWaiting(entity, waitingTime);
         return true;
     }
@@ -162,11 +164,7 @@ public class StackLogic implements IStackLogic {
 
     @Override
     public int getMaxSize(Entity entity){
-        int maxStackSize = sm.getCustomConfig().getInt("stack-max");
-        if (sm.getCustomConfig().isInt("custom." + entity.getType() + ".stack-max")) {
-            maxStackSize =  sm.getCustomConfig().getInt("custom." + entity.getType() + ".stack-max");
-        }
-        return maxStackSize;
+        return ConfigHelper.getInt(sm,"stack-max", entity);
     }
 
     @Override

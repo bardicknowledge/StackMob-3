@@ -6,8 +6,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.scheduler.BukkitRunnable;
+import sun.security.krb5.Config;
 import uk.antiperson.stackmob.api.IStackMob;
 import uk.antiperson.stackmob.api.compat.PluginCompat;
+import uk.antiperson.stackmob.api.tools.ConfigHelper;
 import uk.antiperson.stackmob.compat.hooks.MythicMobsHook;
 import uk.antiperson.stackmob.api.entity.StackTools;
 import uk.antiperson.stackmob.api.tools.WorldTools;
@@ -25,7 +27,7 @@ public class TagTask extends BukkitRunnable {
     public void run() {
         MythicMobsHook mobsHook = (MythicMobsHook) sm.getHookManager().getHook(PluginCompat.MYTHICMOBS);
         for (Entity e : WorldTools.getLoadedEntities()) {
-            if (!sm.getCustomConfig().getStringList("no-stack-worlds").contains(e.getWorld().getName())) {
+            if (!ConfigHelper.getStringList(sm, "no-stack-worlds", e).contains(e.getWorld().getName())) {
                 if(!(e instanceof Mob)){
                     continue;
                 }
@@ -33,15 +35,10 @@ public class TagTask extends BukkitRunnable {
                     String typeString = e.getType().toString();
 
                     int stackSize = StackTools.getSize(e);
-                    int removeAt = sm.getCustomConfig().getInt("tag.remove-at");
-                    if (sm.getCustomConfig().isString("custom." + typeString + ".tag.remove-at")) {
-                        removeAt = sm.getCustomConfig().getInt("custom." + typeString + ".tag.remove-at");
-                    }
+                    int removeAt = ConfigHelper.getInt(sm,"tag.remove-at", e);
+
                     if (stackSize > removeAt) {
-                        String format = sm.getCustomConfig().getString("tag.format");
-                        if (sm.getCustomConfig().isString("custom." + typeString + ".tag.format")) {
-                              format = sm.getCustomConfig().getString("custom." + typeString + ".tag.format");
-                        }
+                        String format = ConfigHelper.getString(sm, "tag.format", e);
 
                         // Change if it is a mythic mob.
                         if (sm.getHookManager().isHookRegistered(PluginCompat.MYTHICMOBS) && mobsHook.isMythicMob(e)) {
@@ -61,10 +58,7 @@ public class TagTask extends BukkitRunnable {
                         }
 
                         if(!(sm.getHookManager().isHookRegistered(PluginCompat.PROCOTOLLIB))){
-                            boolean alwaysVisible = sm.getCustomConfig().getBoolean("tag.always-visible");
-                            if (sm.getCustomConfig().isString("custom." + typeString + ".tag.always-visible")) {
-                                alwaysVisible = sm.getCustomConfig().getBoolean("custom." + typeString + ".tag.always-visible");
-                            }
+                            boolean alwaysVisible = ConfigHelper.getBoolean(sm, "tag.always-visible", e);
                             e.setCustomNameVisible(alwaysVisible);
                         }
                     }

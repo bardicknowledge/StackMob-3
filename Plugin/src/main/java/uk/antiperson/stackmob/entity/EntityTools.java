@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import uk.antiperson.stackmob.api.IStackMob;
 import uk.antiperson.stackmob.api.compat.PluginCompat;
 import uk.antiperson.stackmob.api.entity.IEntityTools;
+import uk.antiperson.stackmob.api.tools.ConfigHelper;
 import uk.antiperson.stackmob.compat.hooks.MythicMobsHook;
 
 /**
@@ -81,9 +82,9 @@ public class EntityTools implements IEntityTools {
 
     @Override
     public void setAi(LivingEntity entity){
-        if(sm.getCustomConfig().getBoolean("no-ai.enabled")){
-            if(sm.getCustomConfig().getBoolean("no-ai.use-whitelist")){
-                if(!(sm.getCustomConfig().getStringList("no-ai.type-whitelist").contains(entity.getType().toString()))){
+        if(ConfigHelper.getBoolean(sm, "no-ai.enabled", entity)){
+            if(ConfigHelper.getBoolean(sm, "no-ai.use-whitelist", entity)){
+                if(!(ConfigHelper.getStringList(sm, "no-ai.type-whitelist", entity).contains(entity.getType().toString()))){
                     return;
                 }
             }
