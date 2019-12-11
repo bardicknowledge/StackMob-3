@@ -36,7 +36,20 @@ public class ConfigHelper {
             value = sm.getCustomConfig().getBoolean(customPath);
         return value;
     }
+
+    public static boolean check(IStackMob sm, String path, Entity entity, String toCheck){
+        if(ConfigHelper.getStringList(sm, "no-" + path, entity)
+                .contains(toCheck)){
+            return true;
+        }
+        if(ConfigHelper.getStringList(sm, path, entity).size() > 0){
+            return !ConfigHelper.getStringList(sm, path, entity).contains(toCheck);
+        }
+        return false;
+    }
+
     private static String getCustomPath(String path, Entity entity) {
         return CUSTOM_PREFIX + entity.getType() + "." + path;
     }
+
 }

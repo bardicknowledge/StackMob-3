@@ -181,7 +181,7 @@ public class StackLogic implements IStackLogic {
         if(sm.getConfigFile().check("stack-types", entity.getType().toString())){
             return true;
         }
-        return sm.getConfigFile().check("stack-worlds", entity.getWorld().getName());
+        return ConfigHelper.check(sm, "stack-worlds", entity, entity.getWorld().getName());
     }
 
     @Override
